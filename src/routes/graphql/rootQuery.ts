@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType} from 'graphql';
 
 import { MemberType, MemberTypeEnumType } from './types/member.js';
 import { Context } from './types/context.js';
