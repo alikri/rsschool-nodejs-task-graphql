@@ -8,9 +8,10 @@ import {
 import { UUIDType } from './uuid.js';
 import { PostType } from './post.js';
 import { SubscriberOnAuthorsType } from './subscriber.js';
-import { User } from '@prisma/client';
+import { ProfileType } from './profile.js';
 
-export const UserType = new GraphQLObjectType<User>({
+
+export const UserType = new GraphQLObjectType({
   name: 'UserType',
   fields: () => ({
     id: { type: new GraphQLNonNull(UUIDType) },
@@ -20,6 +21,7 @@ export const UserType = new GraphQLObjectType<User>({
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(SubscriberOnAuthorsType)),
     },
+    profile: { type: ProfileType },
     subscribedToUser: { type: new GraphQLNonNull(new GraphQLList(UserType)) },
   }),
 });

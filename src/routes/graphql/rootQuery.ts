@@ -1,4 +1,4 @@
-import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql';
+import { GraphQLList, GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { MemberType, MemberTypeEnumType } from './types/member.js';
 import { Context } from './types/context.js';
@@ -61,7 +61,7 @@ export const RootQuery = new GraphQLObjectType<unknown, Context>({
       },
     },
     user: {
-      type: new GraphQLNonNull(UserType),
+      type: UserType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
@@ -74,7 +74,7 @@ export const RootQuery = new GraphQLObjectType<unknown, Context>({
       },
     },
     profile: {
-      type: new GraphQLNonNull(ProfileType),
+      type: ProfileType,
       args: {
         id: { type: new GraphQLNonNull(UUIDType) },
       },
