@@ -53,7 +53,7 @@ export const RootQuery = new GraphQLObjectType<unknown, Context>({
         id: { type: new GraphQLNonNull(UUIDType) },
       },
       resolve: async (_, args: { id: string }, context) => {
-        return context.prisma.user.findUnique({
+        return context.prisma.post.findUnique({
           where: {
             id: args.id,
           },
