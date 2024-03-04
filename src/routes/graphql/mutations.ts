@@ -19,6 +19,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
         });
       },
     },
+
     createPost: {
       type: PostType as GraphQLOutputType,
       args: { dto: { type: new GraphQLNonNull(CreatePostInputType) } },
@@ -28,6 +29,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
         });
       },
     },
+    
     createProfile: {
       type: ProfileType as GraphQLOutputType,
       args: { dto: { type: new GraphQLNonNull(CreateProfileInputType) } },
@@ -37,6 +39,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
         });
       },
     },
+
     deleteUser: {
       type: new GraphQLNonNull(UUIDType),
       args: { id: { type: new GraphQLNonNull(UUIDType) } },
@@ -62,6 +65,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
         return args.id;
       },
     },
+
     deleteProfile: {
       type: new GraphQLNonNull(UUIDType),
       args: { id: { type: new GraphQLNonNull(UUIDType) } },
