@@ -12,6 +12,7 @@ import { ProfileType } from './profile.js';
 import { Context } from './context.js';
 import { Profile, User } from '@prisma/client';
 import { httpErrors } from '@fastify/sensible';
+import { Post } from '@prisma/client';
 
 
 export const UserType = new GraphQLObjectType({
@@ -20,7 +21,20 @@ export const UserType = new GraphQLObjectType({
     id: { type: new GraphQLNonNull(UUIDType) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
-    posts: { type: new GraphQLList(PostType) },
+    posts: {
+      type: new GraphQLList(PostType),
+      resolve: async (
+        parent: { id: string },
+        _args,
+        context: Context,
+      ): Promise<Post[]> => {
+        return context.prisma.post.findMany({
+          where: {
+            authorId: parent.id,
+          },
+      });
+      },
+    },
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(UserType)),
       resolve: async (
