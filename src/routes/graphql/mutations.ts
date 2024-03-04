@@ -46,7 +46,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
             id: args.id,
           },
         });
-        return `User deleted`;
+        return args.id;
       },
     },
 
@@ -59,7 +59,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
             id: args.id,
           },
         });
-        return `Post deleted`;
+        return args.id;
       },
     },
     deleteProfile: {
@@ -71,7 +71,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
             id: args.id,
           },
         });
-        return `Profile deleted`;
+        return args.id;
       },
     },
   },
