@@ -4,6 +4,7 @@ import { Context } from './types/context.js';
 import { Post, Profile, User } from '@prisma/client';
 import { CreatePostInputType, PostType } from './types/post.js';
 import { CreateProfileInputType, ProfileType } from './types/profile.js';
+import { UUIDType } from './types/uuid.js';
 
 
 export const Mutations = new GraphQLObjectType<unknown, Context>({
@@ -31,9 +32,46 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
       type: ProfileType as GraphQLOutputType,
       args: { dto: { type: new GraphQLNonNull(CreateProfileInputType) } },
       resolve: async (_, args: { dto: Profile }, context): Promise<Profile> => {
-          return context.prisma.profile.create({
-            data: args.dto,
-          });
+        return context.prisma.profile.create({
+          data: args.dto,
+        });
+      },
+    },
+    deleteUser: {
+      type: new GraphQLNonNull(UUIDType),
+      args: { id: { type: new GraphQLNonNull(UUIDType) } },
+      resolve: async (_, args: { id: string }, context): Promise<string> => {
+        await context.prisma.user.delete({
+          where: {
+            id: args.id,
+          },
+        });
+        return `User deleted`;
+      },
+    },
+
+    deletePost: {
+      type: new GraphQLNonNull(UUIDType),
+      args: { id: { type: new GraphQLNonNull(UUIDType) } },
+      resolve: async (_, args: { id: string }, context): Promise<string> => {
+        await context.prisma.post.delete({
+          where: {
+            id: args.id,
+          },
+        });
+        return `Post deleted`;
+      },
+    },
+    deleteProfile: {
+      type: new GraphQLNonNull(UUIDType),
+      args: { id: { type: new GraphQLNonNull(UUIDType) } },
+      resolve: async (_, args: { id: string }, context): Promise<string> => {
+        await context.prisma.profile.delete({
+          where: {
+            id: args.id,
+          },
+        });
+        return `Profile deleted`;
       },
     },
   },
