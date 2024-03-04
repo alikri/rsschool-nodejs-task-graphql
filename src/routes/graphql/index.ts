@@ -21,7 +21,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
       try {
         const errorsCheck = validate(schema, parse(source), [depthLimit(5)]);
         if (errorsCheck.length !== 0) {
-          throw fastify.httpErrors.badRequest('Validation failed for GraphQL query.');
+          return {errors: errorsCheck}
         }
       } catch (error) {
         throw new Error();
