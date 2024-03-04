@@ -20,7 +20,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
       },
     },
     createPost: {
-      type: PostType as GraphQLOutputType,
+      type: PostType,
       args: { dto: { type: new GraphQLNonNull(CreatePostInputType) } },
       resolve: async (_, args: { dto: Post }, context): Promise<Post> => {
         return await context.prisma.post.create({
@@ -29,7 +29,7 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
       },
     },
     createProfile: {
-      type: ProfileType as GraphQLOutputType,
+      type: ProfileType,
       args: { dto: { type: new GraphQLNonNull(CreateProfileInputType) } },
       resolve: async (_, args: { dto: Profile }, context): Promise<Profile> => {
         return context.prisma.profile.create({
@@ -122,6 +122,46 @@ export const Mutations = new GraphQLObjectType<unknown, Context>({
           where: { id: args.id },
           data: args.dto,
         });
+      },
+    },
+    subscribeTo: {
+      type: UserType as GraphQLOutputType,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async (_, args: { userId: string; authorId: string }, context) => {
+        const result = await context.prisma.user.update({
+          where: {
+            id: args.userId,
+          },
+          data: {
+            userSubscribedTo: {
+              create: {
+                authorId: args.authorId,
+              },
+            },
+          },
+        });
+        return result;
+      },
+    },
+    unsubscribeFrom: {
+      type: UUIDType,
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async (_, args: { userId: string; authorId: string }, context) => {
+        const result = await context.prisma.subscribersOnAuthors.delete({
+          where: {
+            subscriberId_authorId: {
+              subscriberId: args.userId,
+              authorId: args.authorId,
+            },
+          },
+        });
+        return result.authorId;
       },
     },
   },
