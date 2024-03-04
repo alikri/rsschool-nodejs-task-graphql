@@ -11,7 +11,6 @@ import { PostType } from './post.js';
 import { ProfileType } from './profile.js';
 import { Context } from './context.js';
 import { Profile, User } from '@prisma/client';
-import { httpErrors } from '@fastify/sensible';
 import { Post } from '@prisma/client';
 
 
@@ -59,16 +58,12 @@ export const UserType = new GraphQLObjectType({
         parent: { id: string },
         _args,
         context: Context,
-      ): Promise<Profile> => {
-        const profile = await context.prisma.profile.findUnique({
+      ): Promise<Profile| null> => {
+        return await context.prisma.profile.findUnique({
           where: {
             userId: parent.id,
           },
         });
-        if (profile === null) {
-          throw httpErrors.notFound();
-        }
-        return profile;
       },
     },
     subscribedToUser: {

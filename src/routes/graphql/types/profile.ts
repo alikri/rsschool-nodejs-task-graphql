@@ -7,11 +7,11 @@ import { Context } from './context.js';
 export const ProfileType = new GraphQLObjectType({
   name: 'ProfileType',
   fields: () => ({
-    id: { type: new GraphQLNonNull(UUIDType) },
+    id: { type: UUIDType },
     isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
     yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
     user: { type: new GraphQLNonNull(UserType) },
-    userId: { type: new GraphQLNonNull(GraphQLString) },
+    userId: { type: GraphQLString },
     memberType: {
       type: new GraphQLNonNull(MemberType),
       resolve: async (
