@@ -9,8 +9,8 @@ import { UUIDType } from './uuid.js';
 import { PostType } from './post.js';
 
 import { ProfileType } from './profile.js';
-import { User } from '@prisma/client';
 import { Context } from './context.js';
+import { User } from '@prisma/client';
 
 
 export const UserType = new GraphQLObjectType({
@@ -43,7 +43,7 @@ export const UserType = new GraphQLObjectType({
       type: new GraphQLNonNull(new GraphQLList(UserType)),
       resolve: async (
         parent: { id: string },
-        args,
+        _args,
         context: Context,
       ): Promise<User[]> => {
         return (await context.prisma.user.findMany({
