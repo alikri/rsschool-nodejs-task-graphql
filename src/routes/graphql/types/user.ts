@@ -10,7 +10,8 @@ import { PostType } from './post.js';
 
 import { ProfileType } from './profile.js';
 import { Context } from './context.js';
-import { User } from '@prisma/client';
+import { Profile, User } from '@prisma/client';
+import { httpErrors } from '@fastify/sensible';
 
 
 export const UserType = new GraphQLObjectType({
@@ -19,7 +20,7 @@ export const UserType = new GraphQLObjectType({
     id: { type: new GraphQLNonNull(UUIDType) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
-    posts: { type: new GraphQLNonNull(new GraphQLList(PostType)) },
+    posts: { type: new GraphQLList(PostType) },
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(UserType)),
       resolve: async (
@@ -38,7 +39,24 @@ export const UserType = new GraphQLObjectType({
         });
       },
     },
-    profile: { type: ProfileType },
+    profile: {
+      type: ProfileType,
+      resolve: async (
+        parent: { id: string },
+        _args,
+        context: Context,
+      ): Promise<Profile> => {
+        const profile = await context.prisma.profile.findUnique({
+          where: {
+            userId: parent.id,
+          },
+        });
+        if (profile === null) {
+          throw httpErrors.notFound();
+        }
+        return profile;
+      },
+    },
     subscribedToUser: {
       type: new GraphQLNonNull(new GraphQLList(UserType)),
       resolve: async (
@@ -46,7 +64,7 @@ export const UserType = new GraphQLObjectType({
         _args,
         context: Context,
       ): Promise<User[]> => {
-        return (await context.prisma.user.findMany({
+        return await context.prisma.user.findMany({
           where: {
             userSubscribedTo: {
               some: {
@@ -54,7 +72,7 @@ export const UserType = new GraphQLObjectType({
               },
             },
           },
-        })); 
+        });
       },
     },
   }),

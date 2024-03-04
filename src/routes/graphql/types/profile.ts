@@ -2,6 +2,7 @@ import { GraphQLObjectType, GraphQLNonNull, GraphQLBoolean, GraphQLInt, GraphQLS
 import { MemberType } from './member.js';
 import { UserType } from './user.js';
 import { UUIDType } from './uuid.js';
+import { Context } from './context.js';
 
 export const ProfileType = new GraphQLObjectType({
   name: 'ProfileType',
@@ -11,7 +12,18 @@ export const ProfileType = new GraphQLObjectType({
     yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
     user: { type: new GraphQLNonNull(UserType) },
     userId: { type: new GraphQLNonNull(GraphQLString) },
-    memberType: { type: new GraphQLNonNull(MemberType) },
+    memberType: {
+      type: new GraphQLNonNull(MemberType),
+      resolve: async (
+        parent: { memberTypeId: string },
+        _args,
+        context: Context,
+      ) => {
+        return await context.prisma.memberType.findUnique({
+          where: { id: parent.memberTypeId },
+        });
+      },
+    },
     MemberTypeId: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
